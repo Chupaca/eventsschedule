@@ -9,6 +9,7 @@ var eventswriter = baseWrite.collection("events");
 var eventsreader = baseRead.collection("events");
 var promise = require("bluebird");
 var moment = require("moment");
+var striptags = require('striptags');
 //var linq = require("linq");
 
 function getLastEventList() {
@@ -59,9 +60,26 @@ function createNewCategory(newcategory, user) {
     }
 }
 
+function createNewEvent(newevent, user){
+    newevent.Date = moment().format();
+    newevent.CreaterName = user.UserName;
+    newevent.CreaterId = user._id;
+    //newevent.Text = striptags(newevent.Text, ' ', '\n');
+    return new promise(function (resolve, reject) {
+            eventswriter.insert(newevent, (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.ops[0]._id)
+                }
+            })
+        })
+}
+
 
 
 
 
 exports.GetLastEventList = getLastEventList;
 exports.CreateNewCategory = createNewCategory;
+exports.CreateNewEvent = createNewEvent;

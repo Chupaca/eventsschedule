@@ -36,29 +36,6 @@ passport.use(new LocalStrategy(
         });
     }));
 
-// passport.serializeUser(function (user, cb) {
-//     console.log("serializeUser  === " + user);
-//     var User = {
-//         UserName : user.UserName,
-//         UserType : user.UserType
-//     } 
-//     console.log("serializeUser  === " + user);
-//     cb(null, User);
-// });
-
-// passport.deserializeUser(function (user, cb) {
-//     console.log("deserializeUser  === " + user);
-//     usersDB.findOne({UserName : user.UserName }, function (err, user) {
-//         if (err) { return cb("Error"); }
-//         var User = {
-//             UserName : user.UserName,
-//             UserType : user.UserType
-//         } 
-//         console.log("deserializeUser  === " + User);
-//         cb(null, User);
-//     });
-// });
-
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
@@ -128,6 +105,7 @@ app.get('/user/logout', function (req, res) {
 app.get('/', index.router);
 app.get("/displayevents", baseroute.GetDisplayEventsList);
 app.post("/category/add", baseroute.CreateNewCategory);
+app.post("/events/createnewevent", baseroute.CreateNewEvent);
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

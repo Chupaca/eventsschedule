@@ -32,8 +32,50 @@
 </section>
 <section>
 <div class="uk-grid">   
-<div class="uk-width-3-4">
+<div class="uk-width-1-1">
 <div id="contener_page">
+        <table class="uk-table">
+                    <thead>
+                        <th class="uk-width-1-5">שם קטגורי</th>
+                        <th class="uk-width-1-5"> &nbsp;&nbsp;תאריך</th>
+                        <th class="uk-width-2-5">כותרת</th>
+                        <th class="uk-width-1-5">שם מקליד</th>
+                    </thead>
+                </table>
+                       <div class="uk-accordion" id="eventsAccardion" style="max-height:500px;max-width:100%;overflow-y:auto;" data-uk-accordion="{showfirst:false,  }">
+
+                    <% for(var inx=0; inx < LastEvents.length; inx++){%>
+                        <% var event = LastEvents[inx]%>
+                            <table class="uk-table  uk-table-hover uk-accordion-title" style="margin-bottom:2px" data-id="<%=event._id.toString() %>">
+                                <tbody>
+                                    <tr>
+                                        <td class="uk-width-1-5" name='headName'>
+                                            <%=event.CategoryName %>
+                                        </td>
+                                        <td class="uk-width-1-5" name='headPhone'>
+                                            <%- moment(event.Date).format("DD/MM/YYYY HH:mm") %>
+                                        </td>
+                                        <td class="uk-width-2-5" name='headType'>
+                                            <%=event.Title %>
+                                        </td>
+                                        <td class="uk-width-1-5"  name='headStatus'>
+                                            <%= event.CreaterName %>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="eventsContainer" data-wrapper="true" style="height: 0px; position: relative; overflow: hidden;background:#f7f7f7;margin-bottom:5px;"
+                                aria-expanded="false" data-installerid='<%=event._id.toString() %>'>
+                                <div class="uk-accordion-content">
+                                    <div class="uk-form">
+                                        <div style="width:90%;marge-right:3%;background:#fff;max-height:150px;overflow-y:auto;padding:20px;margin-top:20px;border:2px solid;">
+                                           <%- event.Text %>
+                                       </div>    
+                                    </div>
+                                </div>
+                           </div>
+                        <%}%>
+            </div>
 </div>
 </div>
 </div>
