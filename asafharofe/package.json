@@ -6,7 +6,13 @@
   "description": "asafharofe",
   "author": {
     "name": "Constantin",
-    "email": ""
+    "email": "golaniraf@gmail.com"
+  },
+  "engines": {
+    "node": "6.6.0"
+  },
+  "scripts": {
+  "start": "node app.js"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
