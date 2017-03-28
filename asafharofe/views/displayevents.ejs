@@ -1,0 +1,90 @@
+<% layout('layout') -%>
+<div style="width:100%;">
+<img src="/images/Assaf-Harofeh-Security.jpg"style="margin-right: 5%;"/>
+ <h1 id="title"><%= title %></h1>
+ </div>
+ <br>
+<section>
+ <div class="uk-form" style="margin-right: 4%" >
+    <fieldset>
+        <input type="text" placeholder="טקסט לחיפוש" class="search_block" id="freeText">
+        &nbsp;מ תאריך: &nbsp;<input class="uk-width-1-10 search_block" id="fromDate"  data-uk-datepicker="{format:'DD/MM/YYYY',
+            'i18n':{'months':['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'],'weekdays':['א','ב','ג','ד','ה','ו','ש']}}"> &nbsp;&nbsp;
+        &nbsp;עד תאריך: &nbsp;<input  class="uk-width-1-10 search_block" id="toDate"  data-uk-datepicker="{format:'DD/MM/YYYY',
+            'i18n':{'months':['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'],'weekdays':['א','ב','ג','ד','ה','ו','ש']}}">
+            &nbsp;קטגוריה:&nbsp;
+        <select class="search_block_category" style="min-width:35%;">
+          <option value="0">הכל</option>
+          <% for(var inx=0;inx<Category.length;inx++){%>
+             <option value="<%= Category[inx]._id %>"><%= Category[inx].Name %></option>
+          <%}%>
+        </select>
+        <br>
+        <div style="margin-top:15px;width:100%;">
+        <button id="searchEventesBtn" class="uk-button uk-button-success" style="margin-left:10px;font-size:15px;">&nbsp;חפש&nbsp;<i class="uk-icon-search"></i></button>
+        <button id="cleanfilter" class="uk-button uk-button-danger" style="margin-left:15px;font-size:15px;"> &nbsp;נקה סינון &nbsp;<i class="uk-icon-eraser"></i></button>
+        <button id="addNewCategoryBtn" class="uk-button uk-button-primary" style="font-size:15px;">&nbsp;הוספת קטגוריה&nbsp;<i class="uk-icon-plus"></i></button>
+        <button id="addNewEvent" class="uk-button uk-button-primary" style="font-size:15px;float:left;margin-left: 111px;">&nbsp;הוספת אירוע&nbsp;<i class="uk-icon-plus"></i></button>
+        </div>
+    </fieldset>
+</div>
+<hr>
+</section>
+<section>
+<div class="uk-grid">   
+<div class="uk-width-3-4">
+<div id="contener_page">
+</div>
+</div>
+</div>
+</section>
+<section>
+<div id="textEditor_modal" class="uk-modal">
+<div class="uk-modal-dialog textEditor_contaner" style="width:85%;height:700px;padding:20px 35px;background:#ffe4c4;">
+<a class="uk-modal-close uk-close"></a>
+    <form class="uk-form">
+  <div style="display:flex;justify-content:space-around;margin-bottom: 5%;margin-top: 2%;">
+  <div>
+  <lable class="">קטגוריה: </lable>
+  <select id="category_select" style="min-width:350px;">
+    <option value="0">בחר...</option>
+    <% for(var inx=0;inx<Category.length;inx++){%>
+      <option value="<%= Category[inx]._id %>"><%= Category[inx].Name %></option>
+    <%}%>
+  </select>
+  </div>
+  <div>
+   <lable >כותרת: </lable>
+   <input type="text" id="title_event_modal" placeholder="כותרת" style='min-width:500px;'>
+   </div>
+  </div>
+  <div>
+     <div id="summernote"></div>
+     <div style="display:inline-block">
+     <button id="saveNew" class="uk-button uk-button-primary" type="button" style="font-size:15px;margin-left:25px;" data-event="save">שמור</button>
+    </div>
+</form>
+<input id="texteditor_protocolid" data-id="" hidden>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+		<div id="modulForAddNewCategoryEvent" class="uk-modal">
+			<div class="uk-modal-dialog" style="background:#ffe4c4;">
+      <a class="uk-modal-close uk-close"></a>
+				<div class="uk-modal-header">
+					<h2>הוספת קטגוריה אירועים</h2>
+				</div>
+				<div class="uk=form" style="margin-bottom:25px;">
+            <lable class="" >שם קטגוריה: </lable>
+            <input id="name_new_category_input" type="text" style="width:75%;"  placeholder="קטגוריה חדשה" >
+        </div>
+				<div class="uk-modal-footer uk-text-left" style="margin-top:30px;">
+					<button class="uk-button uk-button-success uk-text-bold" id="addNewCategoryEvent">הוספה &nbsp;<i class="uk-icon-plus-square-o"></i></button>
+					<button class="uk-button uk-button-danger uk-margin-small-left uk-text-bold " onclick="modulForAddNewCategoryEvent.hide()">סגור &nbsp;<i class="uk-icon-close"></i></button>
+				</div>
+			</div>
+		</div>
+	</section>

@@ -1,0 +1,7 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  
+  "debug.inlineValues": true,
+  "editor.minimap.enabled": true,
+  "css.colorDecorators.enable": true
+}
