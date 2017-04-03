@@ -36,7 +36,7 @@
 <div id="contener_page">
         <table class="uk-table">
                     <thead>
-                        <th class="uk-width-1-5">שם קטגורי</th>
+                        <th class="uk-width-1-5">שם קטגוריה</th>
                         <th class="uk-width-1-5"> &nbsp;&nbsp;תאריך</th>
                         <th class="uk-width-2-5">כותרת</th>
                         <th class="uk-width-1-5">שם מקליד</th>
@@ -46,31 +46,37 @@
 
                     <% for(var inx=0; inx < LastEvents.length; inx++){%>
                         <% var event = LastEvents[inx]%>
-                            <table class="uk-table  uk-table-hover uk-accordion-title" style="margin-bottom:2px" data-id="<%=event._id.toString() %>">
+                            <table class="uk-table  uk-table-hover uk-accordion-title" style="margin-bottom:2px">
                                 <tbody>
-                                    <tr>
-                                        <td class="uk-width-1-5" name='headName'>
+                                    <tr class="list_row_event" data-id="<%=event._id.toString() %>">
+                                        <td class="uk-width-1-5" name='list_events_category_name' data-categoryid="<%=event.CategoryId.toString() %>">
                                             <%=event.CategoryName %>
                                         </td>
-                                        <td class="uk-width-1-5" name='headPhone'>
+                                        <td class="uk-width-1-5" name='list_events_date'>
                                             <%- moment(event.Date).format("DD/MM/YYYY HH:mm") %>
                                         </td>
-                                        <td class="uk-width-2-5" name='headType'>
+                                        <td class="uk-width-2-5" name='list_events_title'>
                                             <%=event.Title %>
                                         </td>
-                                        <td class="uk-width-1-5"  name='headStatus'>
+                                        <td class="uk-width-1-5"  name='list_events_creatorname'>
                                             <%= event.CreaterName %>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div class="eventsContainer" data-wrapper="true" style="height: 0px; position: relative; overflow: hidden;background:#f7f7f7;margin-bottom:5px;"
-                                aria-expanded="false" data-installerid='<%=event._id.toString() %>'>
+                                aria-expanded="false" data-eventid='<%= event._id.toString() %>'>
                                 <div class="uk-accordion-content">
-                                    <div class="uk-form">
-                                        <div style="width:90%;marge-right:3%;background:#fff;max-height:150px;overflow-y:auto;padding:20px;margin-top:20px;border:2px solid;">
+                                    <div class="uk-form uk-grid">
+                                        <div class="text_box_event uk-width-2-4">
                                            <%- event.Text %>
-                                       </div>    
+                                       </div>   
+                                       <div class="buttons_box_event uk-width-1-6">
+                                         <button class="uk-button show_changes"> היסטוריה </button><br>
+                                        <button class="uk-button uk-button-primary show_event">הצגת אירוע</button><br>
+                                        <button class="uk-button uk-button-success edit_event">עריכה</button><br>
+                                         <button class="uk-button uk-button-danger remove_event"> מחק אירוע </button>
+                                       </div> 
                                     </div>
                                 </div>
                            </div>
@@ -91,7 +97,7 @@
   <select id="category_select" style="min-width:350px;">
     <option value="0">בחר...</option>
     <% for(var inx=0;inx<Category.length;inx++){%>
-      <option value="<%= Category[inx]._id %>"><%= Category[inx].Name %></option>
+      <option value="<%= Category[inx]._id.toString() %>"><%= Category[inx].Name %></option>
     <%}%>
   </select>
   </div>
@@ -106,7 +112,7 @@
      <button id="saveNew" class="uk-button uk-button-primary" type="button" style="font-size:15px;margin-left:25px;" data-event="save">שמור</button>
     </div>
 </form>
-<input id="texteditor_protocolid" data-id="" hidden>
+<input id="texteditor_eventid" data-id="" hidden>
 </div>
 </div>
 </div>
@@ -115,18 +121,50 @@
 <section>
 		<div id="modulForAddNewCategoryEvent" class="uk-modal">
 			<div class="uk-modal-dialog" style="background:#ffe4c4;">
-      <a class="uk-modal-close uk-close"></a>
+              <a class="uk-modal-close uk-close"></a>
 				<div class="uk-modal-header">
 					<h2>הוספת קטגוריה אירועים</h2>
 				</div>
 				<div class="uk=form" style="margin-bottom:25px;">
-            <lable class="" >שם קטגוריה: </lable>
-            <input id="name_new_category_input" type="text" style="width:75%;"  placeholder="קטגוריה חדשה" >
-        </div>
+                  <lable class="" >שם קטגוריה: </lable>
+                  <input id="name_new_category_input" type="text" style="width:75%;"  placeholder="קטגוריה חדשה" >
+                </div>
 				<div class="uk-modal-footer uk-text-left" style="margin-top:30px;">
 					<button class="uk-button uk-button-success uk-text-bold" id="addNewCategoryEvent">הוספה &nbsp;<i class="uk-icon-plus-square-o"></i></button>
 					<button class="uk-button uk-button-danger uk-margin-small-left uk-text-bold " onclick="modulForAddNewCategoryEvent.hide()">סגור &nbsp;<i class="uk-icon-close"></i></button>
 				</div>
 			</div>
 		</div>
-	</section>
+</section>
+<section>
+		<div id="history_modal" class="uk-modal">
+			<div class="uk-modal-dialog" style="background:#ffe4c4;">
+             <a class="uk-modal-close uk-close"></a>
+				<div class="uk-modal-header">
+					<h2>היסטוריה עריכות אירוע</h2>
+				</div>
+				<div class="uk=form list_event_edits" style="margin-bottom:25px;">
+                </div>
+				<div class="uk-modal-footer uk-text-left" style="margin-top:30px;">
+					<button class="uk-button uk-button-danger uk-margin-small-left uk-text-bold " onclick="history_modal.hide()">סגור &nbsp;<i class="uk-icon-close"></i></button>
+				</div>
+			</div>
+		</div>
+</section>
+<section>
+		<div id="view_event_page" class="uk-modal">
+			<div class="uk-modal-dialog" style="">
+             <a class="uk-modal-close uk-close"></a>
+				<div class="uk-modal-header">
+					<h2 id="view_category_name" style="margin:25px 15px"></h2><br>
+                    <h3 id="view_title" class="uk-text-center uk-text-primary uk-text-bold"><u></u></h3>
+				</div>
+				<div id="view_contener" style="margin-bottom:25px;border:2px solid;padding:15px 30px;max-height:450px;overflow-y:auto;">
+                </div>
+				<div class="uk-modal-footer uk-text-left" style="margin-top:30px;">
+                    <button class="uk-button uk-button-success uk-text-bold" id="print_Event">הדפס &nbsp;<i class="uk-icon-print"></i></button>
+					<button class="uk-button uk-button-danger uk-margin-small-left uk-text-bold " onclick="view_event_page.hide()">סגור &nbsp;<i class="uk-icon-close"></i></button>
+				</div>
+			</div>
+		</div>
+</section>

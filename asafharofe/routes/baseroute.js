@@ -34,4 +34,29 @@ exports.CreateNewEvent = (req,res)=>{
                 res.sendStatus(500);
             }
         })
+};
+
+exports.EditEvent = (req,res)=>{
+    var newevent = req.body;
+    var eventid = req.params.eventid;
+    baselogic.EditEvent(newevent,eventid, req.user)
+        .then((result)=>{
+            if(result){
+                res.send(true);
+            }else{
+                res.sendStatus(500);
+            }
+        })
+};
+
+exports.GetNotesById = (req,res)=>{
+    var eventid = req.params.eventid;
+    baselogic.GetNotesById(eventid)
+        .then((result)=>{
+            if(result){
+                res.send(result);
+            }else{
+                res.sendStatus(500);
+            }
+        })
 }

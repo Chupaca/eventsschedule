@@ -64,7 +64,6 @@ function createNewEvent(newevent, user){
     newevent.Date = moment().format();
     newevent.CreaterName = user.UserName;
     newevent.CreaterId = user._id;
-    //newevent.Text = striptags(newevent.Text, ' ', '\n');
     return new promise(function (resolve, reject) {
             eventswriter.insert(newevent, (err, result) => {
                 if (err) {
@@ -74,7 +73,37 @@ function createNewEvent(newevent, user){
                 }
             })
         })
-}
+};
+
+function editEvent(newevent,eventid, user){
+    var Notes = {};
+    Notes.Date = moment().format();
+    Notes.EditorName = user.UserName;
+    Notes.EditorId = user._id;
+    eventid = mongoHelper.toObjectID(eventid);
+    return new promise(function (resolve, reject) {
+            eventswriter.updateById(eventid, {$set:newevent, $push:{"Notes":Notes}}, (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.nModified)
+                }
+            })
+        })
+};
+
+function getNotesById(eventid){
+    eventid = mongoHelper.toObjectID(eventid);
+    return new promise(function (resolve, reject) {
+            eventsreader.find({_id:eventid}, {_id:0, Notes:1}).toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result)
+                }
+            })
+        })
+};
 
 
 
@@ -83,3 +112,5 @@ function createNewEvent(newevent, user){
 exports.GetLastEventList = getLastEventList;
 exports.CreateNewCategory = createNewCategory;
 exports.CreateNewEvent = createNewEvent;
+exports.EditEvent = editEvent;
+exports.GetNotesById = getNotesById;

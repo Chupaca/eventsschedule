@@ -106,6 +106,8 @@ app.get('/', index.router);
 app.get("/displayevents", baseroute.GetDisplayEventsList);
 app.post("/category/add", baseroute.CreateNewCategory);
 app.post("/events/createnewevent", baseroute.CreateNewEvent);
+app.post("/events/edit/:eventid", baseroute.EditEvent);
+app.get("/events/getnotes/:eventid", baseroute.GetNotesById);
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

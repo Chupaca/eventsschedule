@@ -633,3 +633,23 @@ overflow: hidden;
     font-size: 15px;
     font-weight: bold;
 }
+.text_box_event{
+    width:80%;
+    margin-right:3%;
+    background:#fff;
+    max-height:150px;
+    overflow-y:auto;
+    padding:20px;
+    margin-top:20px;
+    border:2px solid;
+}
+.buttons_box_event{
+    margin-top: 23px;
+}
+.buttons_box_event .show_event,
+.buttons_box_event .edit_event,
+.buttons_box_event .show_changes,
+.buttons_box_event .remove_event{
+    margin-bottom: 5px;
+    width: 100px;
+}
