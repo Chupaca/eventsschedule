@@ -8,6 +8,14 @@ $(document).ready(function () {
     })
 })
 
+ function setupEvensClick(){
+     $(".edit_event").click(editEvent);
+     $(".show_changes").click(showChanges);
+     $(".show_event").click(showEvent);
+     $('#print_Event').click(printEvent);
+     $(".remove_event").click(conformRemoveEvent);
+ };
+
 $("#addNewEvent").click(function () {
     $("#newSubCategory, #title_protocol_modal").val("");
     $(".newHidden").hide();
@@ -18,8 +26,8 @@ $("#addNewEvent").click(function () {
     $("#texteditor_eventid").val("");
     textEditor_modal.show();
 })
-
-$(".edit_event").click(function () {
+    
+function editEvent() {
     $('.panel-body').empty();
     var categoryid = $(this).closest(".eventsContainer").prev().find(".list_row_event").find("[name='list_events_category_name']").data("categoryid");
     var title = $(this).closest(".eventsContainer").prev().find(".list_row_event").find("[name='list_events_title']").text().trim();
@@ -29,10 +37,9 @@ $(".edit_event").click(function () {
     $(this).closest(".eventsContainer").find(".text_box_event").contents().clone().appendTo($('.panel-body'));
      $("#texteditor_eventid").val($(this).closest(".eventsContainer").data("eventid"));
     textEditor_modal.show();
-
-});
-
-$(".show_changes").click(function(){
+};
+    
+function showChanges(){
     var eventid = $(this).closest(".eventsContainer").data("eventid");
     $.get('/events/getnotes/' + eventid, function(notes){
         if(notes && notes[0].Notes &&  notes[0].Notes.length> 0){
@@ -48,18 +55,18 @@ $(".show_changes").click(function(){
             Flash("אין היסטוריה עריכות ", "warning");
         }
     })
-});
-
-$(".show_event").click(function(){
+};
+    
+function showEvent(){
     var categoryname = $(this).closest(".eventsContainer").prev().find(".list_row_event").find("[name='list_events_category_name']").text().trim();
     var title = $(this).closest(".eventsContainer").prev().find(".list_row_event").find("[name='list_events_title']").text().trim();
     $("#view_category_name").html(categoryname);
     $("#view_title u").html(title);
     $(this).closest(".eventsContainer").find(".text_box_event").contents().clone().appendTo($('#view_contener'));
     view_event_page.show();
-});
-
-$('#print_Event').click(function(){
+};
+    
+function printEvent(){
   var head = $("#view_event_page").find(".uk-modal-header").html();
   var contener = $("#view_contener").html();
   var newWin = window.open('', 'Print-Window', 'width=700,height=800');
@@ -70,14 +77,14 @@ $('#print_Event').click(function(){
   newWin.document.write(head + "<br>" + title.innerHTML + "<br><div style='margin:25px;border:2px solid;padding:15px 30px;'>" 
   + contener +'</div><script> window.onload = window.print(); </script></body></html>');
   // setTimeout(function(){newWin.close();},10);
-});
+};
 
-$(".remove_event").click(function(){
+function conformRemoveEvent(){
     var eventid = $(this).closest(".eventsContainer").prev().find(".list_row_event").data("eventid");
     UIkit.modal.confirm("אתה בתוח רוצה למחוק אירוע?", function(){
         removeEvent(eventid);
      });
-})
+};
 
 function removeEvent(eventid){
     if(eventid){
@@ -112,8 +119,8 @@ $("#searchEventesBtn").click(function () {
             forSearch[$(item).attr("id")] = $(item).val().trim();
         }
     })
-    forSearch["Category"] = $(".search_block_category option:selected").val();
-    if (!jQuery.isEmptyObject(forSearch)) {
+    if (!jQuery.isEmptyObject(forSearch) || $(".search_block_category option:selected").val() != '0') {
+        forSearch["Category"] = $(".search_block_category option:selected").val();
         $.ajax({
             url: "/events/search",
             type: "POST",
@@ -121,6 +128,10 @@ $("#searchEventesBtn").click(function () {
             success: function (data) {
                 if (data.length > 0) {
                    $("#contener_page").html(data);
+                   var component = UIkit.accordion($('.uk-accordion'));
+                   component.update();
+                   $(".list_row_event").eq(0).trigger("click");
+                   setupEvensClick();
                 } else {
                     Flash("אין תוצאות על פי חיפוש", "warning");
                 }
@@ -130,7 +141,7 @@ $("#searchEventesBtn").click(function () {
             },
         });
     } else {
-        Flash("אין פרתי חיפוש!", "warning");
+        Flash("אין פרטי לחיפוש!", "warning");
     }
 })
 
@@ -139,14 +150,6 @@ $("#searchEventesBtn").click(function () {
 $("#cleanfilter").click(function () {
     $(".search_block").val("");
     $(".search_block_category option:eq(0)").prop("selected", true);
-})
-
-$("#remove_protocol").click(function () {
-    var id = $("#protocol_title").data("id");
-    $.get("/protocols/remove/" + id, function (result) {
-            Flash("removed");
-           window.location.assign("/protocols/protocolsdisplay");
-    })
 })
 
 //========================= for manager ================
@@ -193,3 +196,5 @@ function Flash(message, type) {
         type = "success";
     var noty = jQuery.notyRenderer.init({ text: message, type: type, layout: 'topCenter', timeout: 2000 });
 };
+
+setupEvensClick();

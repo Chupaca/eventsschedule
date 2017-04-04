@@ -31,8 +31,12 @@ function getAllCategory() {
     })
 }
 function getAllLastEvents() {
+    let conditions = {};
+    let SearchFrom = moment().subtract("day", 7).format();
+    let SearchTo = moment().format();
+    conditions["Date"] = { $gte: SearchFrom, $lte: SearchTo };
     return new promise(function (resolve, reject) {
-        eventsreader.find({}).toArray((err, events) => {
+        eventsreader.find(conditions).toArray((err, events) => {
             if (err) {
                 reject(err);
             } else {
@@ -60,7 +64,7 @@ function createNewCategory(newcategory, user) {
     }
 }
 
-function createNewEvent(newevent, user){
+function createNewEvent(newevent, user) {
     newevent.Date = moment().format();
     newevent.CreaterName = user.UserName;
     newevent.CreaterId = user._id;
@@ -75,14 +79,14 @@ function createNewEvent(newevent, user){
         })
 };
 
-function editEvent(newevent,eventid, user){
+function editEvent(newevent, eventid, user) {
     var Notes = {};
     Notes.Date = moment().format();
     Notes.EditorName = user.UserName;
     Notes.EditorId = user._id;
     eventid = mongoHelper.toObjectID(eventid);
     return new promise(function (resolve, reject) {
-            eventswriter.updateById(eventid, {$set:newevent, $push:{"Notes":Notes}}, (err, result) => {
+            eventswriter.updateById(eventid, { $set: newevent, $push: { "Notes": Notes } }, (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -92,10 +96,10 @@ function editEvent(newevent,eventid, user){
         })
 };
 
-function getNotesById(eventid){
+function getNotesById(eventid) {
     eventid = mongoHelper.toObjectID(eventid);
     return new promise(function (resolve, reject) {
-            eventsreader.find({_id:eventid}, {_id:0, Notes:1}).toArray((err, result) => {
+            eventsreader.find({ _id: eventid }, { _id: 0, Notes: 1 }).toArray((err, result) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -108,7 +112,7 @@ function getNotesById(eventid){
 function removeEvent(eventid) {
     eventid = mongoHelper.toObjectID(eventid);
     return new promise(function (resolve, reject) {
-            eventswriter.remove({_id:eventid}, (err, result) => {
+            eventswriter.remove({ _id: eventid }, (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -125,11 +129,11 @@ function buildbeforeSearchEvents(search) {
         let SearchTo = moment(search.toDate, "DD/MM/YYYY").format();
         conditions["Date"] = { $gte: SearchFrom, $lte: SearchTo };
     }
-    else if (SearchFrom) {
+    else if (search.fromDate) {
         let SearchFrom = moment(search.fromDate, "DD/MM/YYYY").format();
          conditions["Date"] = { $gte: SearchFrom };
     }
-    else if (SearchTo) {
+    else if (search.toDate) {
         let SearchTo = moment(search.toDate, "DD/MM/YYYY").format();
          conditions["Date"] = { $lte: SearchTo };
     }
@@ -137,7 +141,7 @@ function buildbeforeSearchEvents(search) {
     if (search.freeText && search.freeText.length > 0) {
         conditions["Title"] = { $regex: ".*" + search.freeText + ".*" };
     }
-    if(search.Category != "0"){
+    if (search.Category != "0") {
         conditions["CategoryId"] = search.Category;
     }
      return promise.join(getAllCategory(), searchEvents(conditions),
@@ -146,7 +150,7 @@ function buildbeforeSearchEvents(search) {
         })    
 };
 
-function searchEvents(conditions){
+function searchEvents(conditions) {
     return new promise(function (resolve, reject) {
             eventsreader.find(conditions).toArray((err, result) => {
                 if (err) {
