@@ -48,9 +48,6 @@ $("#saveNew").click(function (e) {
                     }
                 }
             })
-        } else {
-            Flash("server problem", "error");
-            return;
         }
     }
 })
@@ -75,9 +72,6 @@ function editProtocol() {
                 }
             }
         })
-    } else {
-        Flash("server problem", "error");
-        return;
     }
 }
 

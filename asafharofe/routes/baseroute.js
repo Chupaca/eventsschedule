@@ -59,4 +59,28 @@ exports.GetNotesById = (req,res)=>{
                 res.sendStatus(500);
             }
         })
+};
+
+exports.RemoveEvent = (req,res)=>{
+    var eventid = req.body.EventId;
+    baselogic.RemoveEvent(eventid)
+        .then((result)=>{
+            if(result){
+                res.send(true);
+            }else{
+                res.sendStatus(500);
+            }
+        })
+};
+
+exports.SearchEvents = (req,res)=>{
+    var search = req.body;
+    baselogic.BuildbeforeSearchEvents(search)
+        .then((eventslist)=>{
+            if(eventslist){
+               res.render('eventspartial', { Category: eventslist[0], LastEvents: eventslist[1], moment:moment });
+            }else{
+                res.sendStatus(500);
+            }
+        })
 }

@@ -72,23 +72,55 @@ $('#print_Event').click(function(){
   // setTimeout(function(){newWin.close();},10);
 });
 
+$(".remove_event").click(function(){
+    var eventid = $(this).closest(".eventsContainer").prev().find(".list_row_event").data("eventid");
+    UIkit.modal.confirm("אתה בתוח רוצה למחוק אירוע?", function(){
+        removeEvent(eventid);
+     });
+})
+
+function removeEvent(eventid){
+    if(eventid){
+        $.ajax({
+            url: "/events/remove",
+            type:"POST",
+            data:{"EventId":eventid},
+            success:function(data){
+                if(data){
+                    Flash("בוצע בהצלכה!");
+                    $(".list_row_event[data-eventid='" + eventid + "']").parent().parent().remove()
+                    $(".eventsContainer[data-eventid=" + eventid + "]").remove();     
+                }else{
+                   Flash("התרחשה שגיאה", "error");
+                }
+            },
+            error:function(err){
+                Flash("התרחשה שגיאה", "error");
+                console.log(err);
+            }
+        })
+    }else{
+         Flash("התרחשה שגיאה", "error");
+    }
+}
+
 
 $("#searchEventesBtn").click(function () {
     var forSearch = {};
-    $(".protocolsearch").each(function (i, item) {
+    $(".search_block").each(function (i, item) {
         if ($(item).val().trim().length > 0) {
             forSearch[$(item).attr("id")] = $(item).val().trim();
         }
     })
+    forSearch["Category"] = $(".search_block_category option:selected").val();
     if (!jQuery.isEmptyObject(forSearch)) {
         $.ajax({
-            url: "/protocols/search",
+            url: "/events/search",
             type: "POST",
             data: forSearch,
-            success: function (result) {
-                if (result.length > 0) {
-                    buildAfterSearch(result);
-                    Flash(" :על פי חיפוש נמצע " + result.length);
+            success: function (data) {
+                if (data.length > 0) {
+                   $("#contener_page").html(data);
                 } else {
                     Flash("אין תוצאות על פי חיפוש", "warning");
                 }
@@ -101,18 +133,6 @@ $("#searchEventesBtn").click(function () {
         Flash("אין פרתי חיפוש!", "warning");
     }
 })
-
-function buildAfterSearch(arrayProtocols) {
-    var text = "<h2>נוהלים על פי חיפוש: </h2><ol class='protocol_list'>";
-    for (var inx = 0; inx < arrayProtocols.length; inx++) {
-        text += `<li><a href="/protocols/protocolsdisplay/${arrayProtocols[inx]._id}">${arrayProtocols[inx].Title}</a></li><hr> `
-    }
-    text += "</ol>";
-    $("#contener_page").css({ "border": "0" });
-    $("#path_page, #forVertions").empty();
-    $("#contener_page").html(text);
-};
-
 
 
 

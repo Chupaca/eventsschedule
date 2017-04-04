@@ -16,8 +16,8 @@ var session = require('express-session');
 
 //============== login password strategy ===============
 var mongoskin = require('mongoskin');
-//var db = require('mongoskin').db('mongodb://localhost:27017/AsafHaRofe');
-var db = require('mongoskin').db('mongo "mongodb://32-1a.mongo.evennode.com:27017,32-1b.mongo.evennode.com:27017/f1c2c7c99758279a418f33df9336a2d8?replicaSet=eusbg1" -u f1c2c7c99758279a418f33df9336a2d8 -p');
+var db = require('mongoskin').db('mongodb://localhost:27017/AsafHaRofe');
+//var db = require('mongoskin').db('mongodb://32-1a.mongo.evennode.com:27017,32-1b.mongo.evennode.com:27017/f1c2c7c99758279a418f33df9336a2d8?replicaSet=eusbg1 -u f1c2c7c99758279a418f33df9336a2d8 -p');
 var usersDB = db.collection('users');
 
 
@@ -48,7 +48,7 @@ passport.deserializeUser(function (user, done) {
 var app = express();
 
 // view engine setup
-app.set('port', (process.env.PORT));
+app.set('port', (process.env.PORT || 3000));
 app.set('views', path.join(__dirname, 'views'));
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
@@ -109,6 +109,8 @@ app.post("/category/add", baseroute.CreateNewCategory);
 app.post("/events/createnewevent", baseroute.CreateNewEvent);
 app.post("/events/edit/:eventid", baseroute.EditEvent);
 app.get("/events/getnotes/:eventid", baseroute.GetNotesById);
+app.post("/events/remove", baseroute.RemoveEvent);
+app.post("/events/search", baseroute.SearchEvents);
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

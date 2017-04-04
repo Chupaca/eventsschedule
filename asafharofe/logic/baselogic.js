@@ -105,8 +105,58 @@ function getNotesById(eventid){
         })
 };
 
+function removeEvent(eventid) {
+    eventid = mongoHelper.toObjectID(eventid);
+    return new promise(function (resolve, reject) {
+            eventswriter.remove({_id:eventid}, (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.result.ok)
+                }
+            })
+        })
+};
 
+function buildbeforeSearchEvents(search) {
+    var conditions = {};
+    if (search.fromDate && search.toDate) {
+        let SearchFrom = moment(search.fromDate, "DD/MM/YYYY").format();
+        let SearchTo = moment(search.toDate, "DD/MM/YYYY").format();
+        conditions["Date"] = { $gte: SearchFrom, $lte: SearchTo };
+    }
+    else if (SearchFrom) {
+        let SearchFrom = moment(search.fromDate, "DD/MM/YYYY").format();
+         conditions["Date"] = { $gte: SearchFrom };
+    }
+    else if (SearchTo) {
+        let SearchTo = moment(search.toDate, "DD/MM/YYYY").format();
+         conditions["Date"] = { $lte: SearchTo };
+    }
 
+    if (search.freeText && search.freeText.length > 0) {
+        conditions["Title"] = { $regex: ".*" + search.freeText + ".*" };
+    }
+    if(search.Category != "0"){
+        conditions["CategoryId"] = search.Category;
+    }
+     return promise.join(getAllCategory(), searchEvents(conditions),
+        (category, listevents) => {
+            return [category, listevents];
+        })    
+};
+
+function searchEvents(conditions){
+    return new promise(function (resolve, reject) {
+            eventsreader.find(conditions).toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result)
+                }
+            })
+        })
+}
 
 
 exports.GetLastEventList = getLastEventList;
@@ -114,3 +164,5 @@ exports.CreateNewCategory = createNewCategory;
 exports.CreateNewEvent = createNewEvent;
 exports.EditEvent = editEvent;
 exports.GetNotesById = getNotesById;
+exports.RemoveEvent = removeEvent;
+exports.BuildbeforeSearchEvents = buildbeforeSearchEvents;

@@ -8,7 +8,7 @@
  <div class="uk-form" style="margin-right: 4%" >
     <fieldset>
         <input type="text" placeholder="טקסט לחיפוש" class="search_block" id="freeText">
-        &nbsp;מ תאריך: &nbsp;<input class="uk-width-1-10 search_block" id="fromDate"  data-uk-datepicker="{format:'DD/MM/YYYY',
+        &nbsp;מתאריך: &nbsp;<input class="uk-width-1-10 search_block" id="fromDate"  data-uk-datepicker="{format:'DD/MM/YYYY',
             'i18n':{'months':['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'],'weekdays':['א','ב','ג','ד','ה','ו','ש']}}"> &nbsp;&nbsp;
         &nbsp;עד תאריך: &nbsp;<input  class="uk-width-1-10 search_block" id="toDate"  data-uk-datepicker="{format:'DD/MM/YYYY',
             'i18n':{'months':['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'],'weekdays':['א','ב','ג','ד','ה','ו','ש']}}">
@@ -21,10 +21,10 @@
         </select>
         <br>
         <div style="margin-top:15px;width:100%;">
-        <button id="searchEventesBtn" class="uk-button uk-button-success" style="margin-left:10px;font-size:15px;">&nbsp;חפש&nbsp;<i class="uk-icon-search"></i></button>
-        <button id="cleanfilter" class="uk-button uk-button-danger" style="margin-left:15px;font-size:15px;"> &nbsp;נקה סינון &nbsp;<i class="uk-icon-eraser"></i></button>
-        <button id="addNewCategoryBtn" class="uk-button uk-button-primary" style="font-size:15px;">&nbsp;הוספת קטגוריה&nbsp;<i class="uk-icon-plus"></i></button>
-        <button id="addNewEvent" class="uk-button uk-button-primary" style="font-size:15px;float:left;margin-left: 111px;">&nbsp;הוספת אירוע&nbsp;<i class="uk-icon-plus"></i></button>
+        <button id="addNewCategoryBtn" class="uk-button uk-button-primary" style="margin-left:10px;font-size:15px;">&nbsp;הוספת קטגוריה&nbsp;<i class="uk-icon-plus"></i></button>
+        <button id="addNewEvent" class="uk-button uk-button-primary" style="margin-left:15px;font-size:15px;">&nbsp;הוספת אירוע&nbsp;<i class="uk-icon-plus"></i></button>
+        <button id="searchEventesBtn" class="uk-button uk-button-success" style="font-size:15px;float:left;">&nbsp;חפש&nbsp;<i class="uk-icon-search"></i></button>
+        <button id="cleanfilter" class="uk-button uk-button-danger" style="font-size:15px;float:left;margin-left:15px;"> &nbsp;נקה סינון &nbsp;<i class="uk-icon-eraser"></i></button>
         </div>
     </fieldset>
 </div>
@@ -42,13 +42,12 @@
                         <th class="uk-width-1-5">שם מקליד</th>
                     </thead>
                 </table>
-                       <div class="uk-accordion" id="eventsAccardion" style="max-height:500px;max-width:100%;overflow-y:auto;" data-uk-accordion="{showfirst:false,  }">
-
+        <div class="uk-accordion" id="eventsAccardion" style="max-height:500px;max-width:100%;overflow-y:auto;" data-uk-accordion="{showfirst:false,  }">
                     <% for(var inx=0; inx < LastEvents.length; inx++){%>
                         <% var event = LastEvents[inx]%>
                             <table class="uk-table  uk-table-hover uk-accordion-title" style="margin-bottom:2px">
                                 <tbody>
-                                    <tr class="list_row_event" data-id="<%=event._id.toString() %>">
+                                    <tr class="list_row_event" data-eventid="<%= event._id.toString() %>">
                                         <td class="uk-width-1-5" name='list_events_category_name' data-categoryid="<%=event.CategoryId.toString() %>">
                                             <%=event.CategoryName %>
                                         </td>
